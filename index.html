@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BankSphere Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <span>🏦</span>
+        <div>
+          BankSphere
+          <small>PORTAL</small>
+        </div>
+      </div>
+
+      <div class="nav-label">MENU</div>
+      <button class="nav-btn active" data-view="dashboard">🏠 Dashboard</button>
+      <button class="nav-btn" data-view="loans">💳 Loan Tracking</button>
+      <button class="nav-btn" data-view="deposits">💰 Deposit Tracking</button>
+
+      <div class="sidebar-note">
+        <strong>Operational snapshot</strong>
+        Unified view of applications, approvals, and portfolio balances across retail banking products.
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <div class="eyebrow">Overview</div>
+          <h1 id="pageTitle">Overview Dashboard</h1>
+          <div id="pageSubtitle" class="subtitle">A consolidated view of loan applications and deposits.</div>
+        </div>
+
+        <div class="top-actions">
+          <div class="date-label" id="today"></div>
+          <div class="avatar">BS</div>
+        </div>
+      </header>
+
+      <section id="dashboardView">
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-head">
+              <span class="stat-name">Total Loans</span>
+              <div class="stat-icon blue">📊</div>
+            </div>
+            <div id="sTotal" class="stat-number">0</div>
+            <div class="stat-foot"><span class="green">Live</span> across active applications</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-head">
+              <span class="stat-name">Under Review</span>
+              <div class="stat-icon amber">⏳</div>
+            </div>
+            <div id="sReview" class="stat-number">0</div>
+            <div class="stat-foot">Pending verification</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-head">
+              <span class="stat-name">Approved</span>
+              <div class="stat-icon green">✅</div>
+            </div>
+            <div id="sApproved" class="stat-number">0</div>
+            <div class="stat-foot">Ready for disbursal</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-head">
+              <span class="stat-name">Rejected</span>
+              <div class="stat-icon red">⚠️</div>
+            </div>
+            <div id="sRejected" class="stat-number">0</div>
+            <div class="stat-foot">Requires review closure</div>
+          </div>
+        </div>
+
+        <div class="overview-grid">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <div class="panel-title">Loan status distribution</div>
+                <div class="panel-sub">Application mix by review stage</div>
+              </div>
+            </div>
+            <div id="statusChart" class="status-list"></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <div class="panel-title">Deposit portfolio</div>
+                <div class="panel-sub">Current account summary</div>
+              </div>
+            </div>
+            <div class="mini-stats">
+              <div class="mini">
+                <span>Total deposits</span>
+                <strong id="dCount">0</strong>
+              </div>
+              <div class="mini">
+                <span>Portfolio value</span>
+                <strong id="dValue">₹0</strong>
+              </div>
+              <div class="mini">
+                <span>Active</span>
+                <strong id="dActive">0</strong>
+              </div>
+              <div class="mini">
+                <span>Matured</span>
+                <strong id="dMatured">0</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">Recent loan activity</div>
+              <div class="panel-sub">Latest applications in the system</div>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Reference</th>
+                  <th>Applicant</th>
+                  <th>Product</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="recentLoans"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="recordsView" class="hidden">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <div id="recordTitle" class="panel-title">Loan Applications</div>
+              <div id="recordSubtitle" class="panel-sub">Track application status, approved amounts and pending documentation.</div>
+            </div>
+            <button id="addRecordBtn" class="btn btn-primary">+ Add Record</button>
+          </div>
+
+          <div class="toolbar">
+            <div class="search">
+              <input id="searchInput" class="field" type="text" placeholder="Search record..." />
+            </div>
+            <select id="statusFilter" class="field"></select>
+            <button id="exportBtn" class="btn btn-light">Export CSV</button>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead id="recordHead"></thead>
+              <tbody id="recordBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="modalBackdrop" class="modal-backdrop hidden">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="modalTitle">Add Record</h2>
+        <button id="closeModalBtn" class="close" type="button">✕</button>
+      </div>
+      <form id="recordForm">
+        <div id="formFields" class="form-grid"></div>
+        <div class="modal-actions">
+          <button type="button" id="cancelModalBtn" class="btn btn-light">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Record</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
